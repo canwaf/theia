@@ -9,28 +9,10 @@
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="text/javascript">
-        var tabledata;
 
-        window.addEventListener('load', async function () {
-            // Fetch the CSV file
-            try {
-                const response = await fetch("https://raw.githubusercontent.com/GSS-Cogs/family-ess/main/aged-19-years-and-over-further-education-and-skills-participation/aged-19-years-and-over-further-education-and-skills-participation.csv");
-                tabledata = await response.text();
-                console.log(tabledata);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            // Create Tabulator
-            var table = new Tabulator("#example-table", {
-                height: 500, // set height of table (optional)
-                data: tabledata, // assign data to table
-                importFormat: "csv", // import data as csv (required)
-                layoutColumnsOnNewData: true, // fit columns to width of table (optional)
-                autoColumns: true, // create columns from data field names
-            });
-        });
-    </script>
-    <script type="text/javascript">
+        // Metadata JSON URL from CSV-W, this is the only thing needing changing to view different datasets
+        const METADATA_JSON = "https://raw.githubusercontent.com/GSS-Cogs/family-ess/main/out/persistent-absences-for-pupils-eligible-for-free-school-meals/persistent-absences-for-pupils-eligible-for-free-school-meals.csv-metadata.json";
+
         function fetchFormatDateTime(contents) {
             const date = new Date(contents);
             const options = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' };
@@ -77,12 +59,48 @@
             var serializer = new XMLSerializer();
             element.innerHTML = serializer.serializeToString(doc.body);
         }
+        function getNewURL(oldURL, newFilename) {
+            const url = new URL(oldURL);
+            url.pathname = url.pathname.replace(/\/[^\/]*$/, `/${newFilename}`);
+            return url.href;
+        }
 
         window.addEventListener('load', async function () {
             try {
-                const response = await fetch("https://raw.githubusercontent.com/GSS-Cogs/family-ess/main/out/persistent-absences-for-pupils-eligible-for-free-school-meals/persistent-absences-for-pupils-eligible-for-free-school-meals.csv-metadata.json");
+                /*
+                * This section fetches the metadata JSON file and the CSV file
+                */
+
+                // CSV-W JSON file
+                const response = await fetch(METADATA_JSON);
                 const data = await response.json();
                 console.log(data);
+
+                // Find the CSV file relative to the JSON file
+                const csvName = data["tables"][0]["url"];
+                console.log(csvName);
+                const csvURL = getNewURL(METADATA_JSON, csvName);
+                console.log(csvURL);
+
+                // Fetch the CSV file
+                try {
+                    const response = await fetch(csvURL);
+                    tabledata = await response.text();
+                    console.log(tabledata);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+
+                // Create Tabulator
+                var table = new Tabulator("#example-table", {
+                    height: 500, // set height of table (optional)
+                    data: tabledata, // assign data to table
+                    importFormat: "csv", // import data as csv (required)
+                    layoutColumnsOnNewData: true, // fit columns to width of table (optional)
+                    autoColumns: true, // create columns from data field names
+                });
+
+
 
                 // Extract the DCAT metadata
                 const seeAlso = data['rdfs:seeAlso'];
@@ -113,11 +131,12 @@
 
                 // dump metadata to the page
                 // updateElement('metadata', JSON.stringify(metadata, null, 2));
-
-            } catch (error) {
+            }
+            catch (error) {
                 console.error('Error:', error);
             }
         });
+
     </script>
     <style>
         html {
