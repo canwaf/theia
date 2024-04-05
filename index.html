@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 
 <head>
     <meta charset="UTF-8">
@@ -34,6 +34,30 @@
             // Convert Markdown to HTML using marked library
             var element = document.getElementById(target_id);
             element.innerHTML = marked.parse(contents);
+
+            // Parse the HTML string into a DOM object
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(element.innerHTML, 'text/html');
+
+            // Find all heading elements
+            var headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+            // Loop through each heading element
+            headings.forEach(function (heading) {
+                // Add the class
+                heading.classList.add('govuk-heading-s');
+
+                // Create a new hr element
+                var hr = doc.createElement('hr');
+                hr.className = 'govuk-section-break govuk-section-break--l govuk-section-break--visible';
+
+                // Insert the hr before the heading
+                heading.parentNode.insertBefore(hr, heading);
+            });
+
+            // Serialize the modified DOM object back into an HTML string
+            var serializer = new XMLSerializer();
+            element.innerHTML = serializer.serializeToString(doc.body);
         }
         function getNewURL(oldURL, newFilename) {
             const url = new URL(oldURL);
@@ -114,35 +138,300 @@
         });
 
     </script>
+    <style>
+        html {
+            display: block;
+        }
+
+        body {
+            display: block;
+            margin: 8px;
+        }
+
+        .govuk-template {
+            overflow-y: scroll;
+            scroll-padding-top: 0;
+            background-color: #f3f2f1;
+            text-size-adjust: 100%;
+        }
+
+        .govuk-template__body {
+            margin: 0;
+            background-color: #ffffff;
+        }
+
+        .app-width-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .app-datasets {
+            padding-top: 20px;
+            padding-bottom: 15px;
+            color: #0b0c0c;
+        }
+
+        .govuk-caption-xl {
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 18px;
+            font-size: 1.125rem;
+            line-height: 1.1111111111;
+            display: block;
+            margin-bottom: 5px;
+            color: #505a5f;
+        }
+
+        .app-datasets__title {
+            color: #0b0c0c;
+            margin-bottom: 30px;
+        }
+
+        .govuk-heading-xl {
+            color: #0b0c0c;
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 700;
+            font-size: 32px;
+            font-size: 2rem;
+            line-height: 1.09375;
+            display: block;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .govuk-heading-l {
+            color: #0b0c0c;
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 700;
+            font-size: 24px;
+            font-size: 1.5rem;
+            line-height: 1.0416666667;
+            display: block;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .govuk-heading-m {
+            color: #0b0c0c;
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 700;
+            font-size: 18px;
+            font-size: 1.125rem;
+            line-height: 1.1111111111;
+            display: block;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .govuk-heading-s {
+            color: #0b0c0c;
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 700;
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.25;
+            display: block;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 40.0625em) {
+            .govuk-heading-xl {
+                font-size: 48px;
+                font-size: 3rem;
+                line-height: 1.0416666667;
+            }
+
+            .govuk-heading-l {
+                font-size: 36px;
+                font-size: 2.25rem;
+                line-height: 1.1111111111;
+            }
+
+            .govuk-heading-s {
+                font-size: 19px;
+                font-size: 1.1875rem;
+                line-height: 1.3157894737;
+            }
+        }
+
+        .app-datasets__description {
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 24px;
+            font-size: 1.5rem;
+            line-height: 1.25;
+            margin-bottom: 0;
+        }
+
+        .govuk-link {
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-decoration: underline;
+        }
+
+        .govuk-link:link {
+            color: #1d70b8;
+        }
+
+        .govuk-link:visited {
+            color: #4c2c92;
+        }
+
+        .govuk-link:hover {
+            color: #003078;
+        }
+
+        .govuk-link:active {
+            color: #0b0c0c;
+        }
+
+        .govuk-link:focus {
+            color: #0b0c0c;
+        }
+
+        .govuk-body {
+            color: #0b0c0c;
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.25;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .govuk-grid-row {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .govuk-grid-row:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .app-section-row {
+            /* display: flex; */
+        }
+
+        .govuk-grid-column-two-thirds {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0 15px;
+            width: 66.6666666667%;
+            float: left;
+        }
+
+        .govuk-section-break {
+            margin: 0;
+            border: 0;
+        }
+
+        .govuk-section-break--visible {
+            border-bottom: 1px solid #b1b4b6;
+        }
+
+        .govuk-section-break--l {
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .govuk-table {
+            font-family: "GDS Transport", arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.25;
+            color: #0b0c0c;
+            width: 100%;
+            margin-bottom: 20px;
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 
-<body>
-    <header>
-        <span id="content_type">Dataset</dataset>
-            <h1 id="header"></h1>
-            <summary id="summary"></summary>
-    </header>
-    <pre id="metadata"></pre>
-    <details>
-        <h3>Publisher</h3>
-        <div id="publisher"></div>
-        <h3>Release Details</h3>
-        <div id="release_details">
-            <p>Published: <span id="issued"></span></p>
-            <p>Modified: <span id="modified"></span></p>
-            <p>Next release: <span id="next_release"></span> (<span id="release_cadence">Quarterly</span>)</p>
+<body class="govuk-template__body">
+    <div class="app-width-container">
+        <div class='app-datasets'>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <span class="govuk-caption-xl" id="content_type">Dataset</span>
+                    <h1 class="govuk-heading-xl app-datasets__title" id="header"></h1>
+                    <summary class="app-datasets__description" id="summary"></summary>
+                </div>
+            </div>
         </div>
-        <h3>Topic and keywords</h3>
-        <span id="theme"></span> | <span id="keywords"></span>
-        <h3>License</h3>
-        <span id="license"></span>
-        <h3>Description</h3>
-        <div id="description"></div>
+        <pre id="metadata"></pre>
+        <main class="app-datasets">
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            </hr>
+            <div class="govuk-grid-row app-section-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-l" id="about">
+                        About
+                    </h1>
+                    <div class="govuk-body">
+                        <h3 class="govuk-heading-s">Publisher</h3>
+                        <a class="govuk-link" id="publisher" href="#"></a>
+                    </div>
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    </details>
-    <h2>Table</h2>
-    <table id="example-table"></table>
+                    <h3 class="govuk-heading-s">Release Details</h3>
+                    <div class="govuk-body" id="release_details">
+                        <p style="font-weight: 700;">Published: <span style="font-weight: 400;" id="issued"></span></p>
+                        <p style="font-weight: 700;">Modified: <span style="font-weight: 400;" id="modified"></span></p>
+                        <p style="font-weight: 700;">Next release: <span style="font-weight: 400;"
+                                id="next_release"></span> (<span style="font-weight: 400;"
+                                id="release_cadence">Quarterly</span>)
+                        </p>
+                    </div>
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
+                    <h3 class="govuk-heading-s">Topic and keywords</h3>
+                    <div class="govuk-body">
+                        <span id="theme"></span> | <span id="keywords"></span>
+                    </div>
+
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+                    <h3 class="govuk-heading-s">License</h3>
+                    <a class="govuk-link" id="license" href="#"></a>
+
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+                    <h3 class="govuk-heading-s">Description</h3>
+                    <div class="govuk-body" id="description"></div>
+
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                </div>
+            </div>
+            <h1 class="govuk-heading-l" id="preview">
+                Table
+            </h1>
+            <table class="govuk-table" id="example-table"></table>
+        </main>
+    </div>
 
 </body>
 
