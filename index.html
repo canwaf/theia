@@ -7,6 +7,7 @@
     <title>CSV Viewer</title>
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="text/javascript">
         var tabledata;
 
@@ -30,6 +31,29 @@
         });
     </script>
     <script type="text/javascript">
+        function fetchFormatDateTime(contents) {
+            const date = new Date(contents);
+            const options = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+        function updateElement(target_id, contents) {
+            var element = document.getElementById(target_id);
+            element.textContent = contents;
+        }
+        function getKeywords(data) {
+            const keywords = data["http://www.w3.org/ns/dcat#keyword"];
+            const values = keywords.map(item => item["@value"]);
+            return values.join(", ");
+        }
+        function updateElementMarkdown(target_id, contents) {
+            // Unescape line breaks
+            // const unescapedString = markdownString.replace(/\n/g, '\\\n');
+            // return markdownString;
+            // Convert Markdown to HTML using marked library
+            var element = document.getElementById(target_id);
+            element.innerHTML = marked.parse(contents);
+        }
+
         window.addEventListener('load', async function () {
             try {
                 const response = await fetch("https://raw.githubusercontent.com/GSS-Cogs/family-ess/main/out/persistent-absences-for-pupils-eligible-for-free-school-meals/persistent-absences-for-pupils-eligible-for-free-school-meals.csv-metadata.json");
@@ -40,14 +64,32 @@
                 const seeAlso = data['rdfs:seeAlso'];
                 const metadata = seeAlso.find(item => item['@type'].includes('http://www.w3.org/ns/dcat#Dataset'));
 
-                // Create a new 'pre' element
-                var pre = document.createElement('pre');
+                //set dataset title
+                updateElement('header', metadata['http://purl.org/dc/terms/title'][0]['@value'].replace("/^" | "$/g", '').trim());
 
-                // Set the text content of the 'pre' element
-                pre.textContent = JSON.stringify(metadata, null, 2);
+                //set dataset summary
+                updateElement('summary', metadata['http://www.w3.org/2000/01/rdf-schema#comment'][0]['@value']);
 
-                // Append the 'pre' element to the body of the document
-                document.body.appendChild(pre);
+                //set dataset publisher
+                updateElement('publisher', metadata['http://purl.org/dc/terms/publisher'][0]['@id']);
+
+                //set dataset dates
+                updateElement('issued', fetchFormatDateTime(metadata['http://purl.org/dc/terms/issued'][0]['@value']));
+                updateElement('modified', fetchFormatDateTime(metadata['http://purl.org/dc/terms/modified'][0]['@value']));
+
+                //set dataset theme and keywords
+                updateElement('theme', metadata['http://www.w3.org/ns/dcat#theme'][0]['@id']);
+                updateElement('keywords', getKeywords(metadata));
+
+                //set dataset license
+                updateElement('license', metadata['http://purl.org/dc/terms/license'][0]['@id']);
+
+                //set dataset description
+                updateElementMarkdown('description', metadata['http://purl.org/dc/terms/description'][0]['@value']);
+
+                // dump metadata to the page
+                // updateElement('metadata', JSON.stringify(metadata, null, 2));
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -56,10 +98,31 @@
 </head>
 
 <body>
-    <h1>CSV-W Viewer</h1>
+    <header>
+        <span id="content_type">Dataset</dataset>
+            <h1 id="header"></h1>
+            <summary id="summary"></summary>
+    </header>
+    <pre id="metadata"></pre>
+    <details>
+        <h3>Publisher</h3>
+        <div id="publisher"></div>
+        <h3>Release Details</h3>
+        <div id="release_details">
+            <p>Published: <span id="issued"></span></p>
+            <p>Modified: <span id="modified"></span></p>
+            <p>Next release: <span id="next_release"></span> (<span id="release_cadence">Quarterly</span>)</p>
+        </div>
+        <h3>Topic and keywords</h3>
+        <span id="theme"></span> | <span id="keywords"></span>
+        <h3>License</h3>
+        <span id="license"></span>
+        <h3>Description</h3>
+        <div id="description"></div>
+
+    </details>
     <h2>Table</h2>
-    <div id="example-table"></div>
-    <h2>Metadata</h2>
+    <table id="example-table"></table>
 
 
 </body>
