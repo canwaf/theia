@@ -16,9 +16,10 @@ Theia primarily depends on Tabulator, a JavaScript library that allows you to cr
 
 Theia is currently a proof of concept, and there are many improvements that can be made to it. Some of the improvements that can be made are:
 
-- **Static page generation**: Theia can be improved by generating a static page using GitHub actions. This will allow users without JavaScript to view a preview of the tabular data and metadata. This can be done by using GitHub Actions or Flask.
+- **Static page generation**: Theia can be improved by generating a static page using GitHub actions or Flask. This will allow users without JavaScript to view a preview of the tabular data and metadata.
 - **Improved metadata display**: Theia can be improved by displaying the metadata in a more human-readable format (e.g. not using URLs for the pulisher).
 - **Improved tabular data display**: Theia can be made more CSV-W aware by suppressing the display of columns which are part of the CSV but excluded in the CSV-W.
+- **Click to view data**: Theia can be improved by allowing users to manipulate the data in the table (e.g. sort, filter, etc.) by optionally loading the entire dataset instead of just the first 10 rows as a preview.
 
 ### Feature and development roadmap
 
