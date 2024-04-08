@@ -20,6 +20,8 @@ Theia is currently a proof of concept, and there are many improvements that can 
 - **Improved metadata display**: Theia can be improved by displaying the metadata in a more human-readable format (e.g. not using URLs for the pulisher).
 - **Improved tabular data display**: Theia can be made more CSV-W aware by suppressing the display of columns which are part of the CSV but excluded in the CSV-W.
 - **Click to view data**: Theia can be improved by allowing users to manipulate the data in the table (e.g. sort, filter, etc.) by optionally loading the entire dataset instead of just the first 10 rows as a preview.
+- **Improved styling**: Theia can be improved by adding more styling and adopting a design system appriopriate for the publisher of the CSV-W.
+- **Data visualisation**: Theia can be improved by adding data visualisation capabilities to the tabular data (e.g. charts, graphs, etc.).
 
 ### Feature and development roadmap
 
@@ -31,7 +33,7 @@ block-beta
   3a["Data source"]:1 3b["CSV-W"]:2 3c["API"]:2
   4a["Runner"]:1 4b["n/a"]:1 4c["GitHub Actions"]:2 4d["Flask"]:1
   5a["Accessability"]:1 5b["Null HTML"]:1 5c["Metadata & Tabular preview in HTML"]:3
-  6a["Hosting"]:1 6b["GitHub.io"]:2 6c["Custom domain"]:2
+  6a["Hosting"]:1 6b["None"]:1 6c["github.io"]:1 6d["Custom domain"]:2
   7a["Development "]:1 7b<["Now"]>(up):1 7c<["Next"]>(up):1 7d<["Later"]>(up):1 7e<["Beyond"]>(up):1
 ```
 
