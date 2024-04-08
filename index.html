@@ -98,6 +98,15 @@
                     importFormat: "csv", // import data as csv (required)
                     layoutColumnsOnNewData: true, // fit columns to width of table (optional)
                     autoColumns: true, // create columns from data field names
+                    autoColumnsDefinitions: function (definitions) {
+                        //definitions - array of column definition objects
+
+                        definitions.forEach((column) => {
+                            column.headerFilter = true; // add header filter to every column
+                        });
+
+                        return definitions;
+                    },
                 });
 
 
